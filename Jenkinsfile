@@ -9,7 +9,7 @@ pipeline {
             }
         }
 
-        stage('OpenCover') {
+        stage('Open Cover') {
             steps {
                 bat 'choco install opencover -y'
                 bat 'OpenCover.Console.exe -register:user -target:"vstest.console.exe" -targetargs:"./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll /ResultsDirectory:./TestResults/testResults.trx" -output:"./result.xml"'
@@ -21,6 +21,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube-Server') {
                     bat 'SonarScanner.MSBuild.exe begin /k:"org.sonarqube:sonarqube-scanner-msbuild" /n:"Jenkins MSBuild project" /v:"1.0"'
+                    bat 'vstest.console.exe ./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll /ResultsDirectory:./TestResults/testResults.trx'
                     bat 'MSBuild.exe /t:Rebuild'
                     bat 'SonarScanner.MSBuild.exe end'
                 }
