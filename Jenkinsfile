@@ -19,7 +19,7 @@ pipeline {
             steps {
                 bat 'choco install opencover -y'
                 bat 'OpenCover.Console.exe -register:user -target:"vstest.console.exe" -targetargs:"./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll" -output:"./result.xml"'
-                publishCoverage adapters: [opencoverAdapter(mergeToOneReport: true, path: '**/*.xml')], sourceFileResolver: sourceFiles('NEVER_STORE')
+                publishCoverage adapters: [opencoverAdapter(mergeToOneReport: true, path: 'result.xml')], sourceFileResolver: sourceFiles('NEVER_STORE')
             }
         }
 
