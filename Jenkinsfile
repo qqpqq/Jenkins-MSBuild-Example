@@ -3,6 +3,11 @@ pipeline {
         label 'windowsAgent1'
     }
     stages {
+        stage('Install Dependencies') {
+            steps {
+                bat 'nuget restore'
+            }
+        }
         stage('Static Analysis') {
             steps {
                 bat 'SonarScanner.MSBuild.exe begin /k:"org.sonarqube:sonarqube-scanner-msbuild" /n:"Jenkins MSBuild project" /v:"1.0"'
