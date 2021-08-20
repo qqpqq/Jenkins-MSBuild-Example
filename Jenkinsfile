@@ -8,6 +8,15 @@ pipeline {
                 bat 'nuget restore'
             }
         }
+
+        stage('OpenCover') {
+            steps {
+                bat 'choco install opencover -y'
+                bat 'OpenCover.Console.exe -register:user -target:"vstest.console.exe" -targetargs:"./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll /ResultsDirectory:./TestResults/testResults.trx" -output:"./result.xml"'
+                publishCoverage adapters: [opencoverAdapter(mergeToOneReport: true, path: 'result.xml')], sourceFileResolver: sourceFiles('NEVER_STORE')
+            }
+        }
+
         stage('Static Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube-Server') {
@@ -17,14 +26,6 @@ pipeline {
                 }
             }
         }
-        stage('OpenCover') {
-            steps {
-                bat 'choco install opencover -y'
-                bat 'OpenCover.Console.exe -register:user -target:"vstest.console.exe" -targetargs:"./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll" -output:"./result.xml"'
-                publishCoverage adapters: [opencoverAdapter(mergeToOneReport: true, path: 'result.xml')], sourceFileResolver: sourceFiles('NEVER_STORE')
-            }
-        }
-
 
         stage("Build") {
              steps {
