@@ -10,9 +10,14 @@ pipeline {
                 bat 'SonarScanner.MSBuild.exe end'
             }
         }
+        stage('OpenCover') {
+            steps {
+                bat 'OpenCover.Console.exe -register:user -target:"vstest.console.exe" -targetargs:"./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll" -output:"./open_cover/result.xml"'
+            }
+        }
         stage("Build") {
              steps {
-                bat "msbuild ./JenkinsMSBuildExample.csproj"
+                bat "msbuild"
             }
         }
     }
