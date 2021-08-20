@@ -5,9 +5,9 @@ pipeline {
     stages {
         stage('Static Analysis') {
             steps {
-                sh 'SonarScanner.MSBuild.exe begin /k:"org.sonarqube:sonarqube-scanner-msbuild" /n:"Jenkins MSBuild project" /v:"1.0"'
-                sh 'MSBuild.exe /t:Rebuild'
-                sh 'SonarScanner.MSBuild.exe end'
+                bat 'SonarScanner.MSBuild.exe begin /k:"org.sonarqube:sonarqube-scanner-msbuild" /n:"Jenkins MSBuild project" /v:"1.0"'
+                bat 'MSBuild.exe /t:Rebuild'
+                bat 'SonarScanner.MSBuild.exe end'
             }
         }
         stage("Build") {
