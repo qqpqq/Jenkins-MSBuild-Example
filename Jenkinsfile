@@ -17,7 +17,7 @@ pipeline {
         }
         stage('OpenCover') {
             steps {
-                bat 'choco install opencover'
+                bat 'choco install opencover -y'
                 bat 'OpenCover.Console.exe -register:user -target:"vstest.console.exe" -targetargs:"./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll" -output:"./open_cover/result.xml"'
             }
         }
