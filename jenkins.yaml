@@ -18,6 +18,14 @@ pipeline:
         bat:
           script: nuget restore
 
+    - name: Build
+      run:
+        bat:
+          script: msbuild
+      alert:
+        failed:
+          message: 'Build Failed'
+
     - name: Dynamic Analysis
       run:
         bat:
@@ -40,15 +48,6 @@ pipeline:
               vstest.console.exe ./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll /ResultsDirectory:./TestResults/testResults.trx
               MSBuild.exe /t:Rebuild
               SonarScanner.MSBuild.exe end
-
-      alert:
-        failed:
-          message: 'Static Analysis Failed'
-
-    - name: Build
-      run:
-        bat:
-          script: msbuild
 
       alert:
         failed:
