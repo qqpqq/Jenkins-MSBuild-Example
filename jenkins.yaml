@@ -1,0 +1,55 @@
+pipeline:
+  node: windowAgent1
+  stages:
+    - name: Code Checkout
+      run:
+        checkout:
+          branches: [ main ]
+          userRemoteConfigs:
+            - credentialsId: 'mallycrip'
+              url: 'https://github.com/qqpqq/Jenkins-MSBuild-Example.git'
+
+      alert:
+        failed:
+          message: 'Code Checkout Failed'
+
+    - name: Install Dependencies
+      run:
+        bat:
+          script: nuget restore
+
+    - name: Dynamic Analysis
+      run:
+        bat:
+          script: |
+            choco install opencover -y
+            OpenCover.Console.exe -register:user -target:"vstest.console.exe" -targetargs:"./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll /ResultsDirectory:./TestResults/testResults.trx" -output:"./result.xml"
+        opencover:
+          path: result.xml
+
+      alert:
+        failed:
+          message: 'Dynamic Analysis Failed'
+
+    - name: Static Analysis
+      run:
+        withSonarQubeEnv:
+          bat:
+            script: |
+              SonarScanner.MSBuild.exe begin /k:"org.sonarqube:sonarqube-scanner-msbuild" /n:"Jenkins MSBuild project" /v:"1.0"
+              vstest.console.exe ./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll /ResultsDirectory:./TestResults/testResults.trx
+              MSBuild.exe /t:Rebuild
+              SonarScanner.MSBuild.exe end
+
+      alert:
+        failed:
+          message: 'Static Analysis Failed'
+
+    - name: Build
+      run:
+        bat:
+          script: msbuild
+
+      alert:
+        failed:
+          message: 'Static Analysis Failed'
