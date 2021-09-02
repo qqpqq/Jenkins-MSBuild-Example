@@ -1,5 +1,5 @@
 pipeline:
-  node: windowAgent1
+  node: windowsAgent1
   stages:
     - name: Code Checkout
       run:
