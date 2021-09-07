@@ -55,7 +55,7 @@ pipeline:
           
     - name: Deploy
       run:
-        sh:
+        bat:
           script: |
             python deploy.py
       alert:
