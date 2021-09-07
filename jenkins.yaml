@@ -33,6 +33,7 @@ pipeline:
             choco install opencover -y
             OpenCover.Console.exe -register:user -target:"vstest.console.exe" -targetargs:"./JenkinsMSBuildExampleTest/bin/Debug/JenkinsMSBuildExampleTest.dll /ResultsDirectory:./TestResults/testResults.trx" -output:"./result.xml"
         opencover:
+          alert: true
           path: result.xml
 
       alert:
@@ -42,6 +43,7 @@ pipeline:
     - name: Static Analysis
       run:
         withSonarQubeEnv:
+          alert: true
           bat:
             script: |
               SonarScanner.MSBuild.exe begin /k:"org.sonarqube:sonarqube-scanner-msbuild" /n:"Jenkins MSBuild project" /v:"1.0"
