@@ -52,3 +52,14 @@ pipeline:
       alert:
         failed:
           message: 'Static Analysis Failed'
+          
+    - name: Deploy
+      run:
+        sh:
+          script: |
+            python deploy.py
+      alert:
+        success:
+          message: 'Deploy Success'
+        failed:
+          message: 'Deploy Failed'
